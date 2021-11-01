@@ -8,19 +8,23 @@ const game = {
     ctx: undefined,
     canvasSize: { width: undefined, height: undefined },
     player: undefined,
-    frames: 100,
+    frames: 60,
     keys: {
           ARROW_UP: "ArrowUp",
           ARROW_LEFT: "ArrowLeft",
           ARROW_DOWN: "ArrowDown",
-          ARROW_RIGHT: "ArrowRight"
+          ARROW_RIGHT: "ArrowRight",
+          KEY_S: "s",
+          KEY_A: "a",
+          KEY_W: "w",
+          KEY_D: "d"
           },
+    gravity: "DOWN",
     
   
     init() {
       this.setContext()
       this.setDimensions()
-
       this.setListeners()
       this.createAll()
       
@@ -34,8 +38,9 @@ const game = {
     },
 
     setDimensions() {
-      this.canvasSize.width = window.innerWidth
-      this.canvasSize.height = window.innerHeight
+      //OJO!!! he puesto innerHeight en el width para que sea un cuadrado
+      this.canvasSize.width = 600
+      this.canvasSize.height = 600
   
       this.canvasDOM.setAttribute("width", this.canvasSize.width)
       this.canvasDOM.setAttribute("height", this.canvasSize.height)
@@ -46,8 +51,8 @@ const game = {
   
         this.clearScreen()
         this.drawAll()
-        this.moveAll()
-  
+        this.gravityAll()
+        // this.ctx.restore()
       }, 1000 / this.frames)
     },
 
@@ -59,12 +64,12 @@ const game = {
       this.player.draw()
     },
 
-    moveAll() {
-      this.movePlayer()
+    gravityAll() {
+      this.gravityPlayer()
     },
 
-    movePlayer() {
-      this.player.move()
+    gravityPlayer() {
+      this.player.acceleration(this.gravity)
     },
 
     createAll() {
@@ -72,15 +77,31 @@ const game = {
     },
 
     createPlayer() {
-      this.player = new Player(this.ctx, this.canvasSize, this.canvasSize.width/2-25, this.canvasSize.height-100,this.canvasSize.height-100, 50, 100, 5)
+      this.player = new Player(this.ctx, this.canvasSize, this.canvasSize.width/2-25, this.canvasSize.height-100, 50, 100)
     },
 
     setListeners() {
       document.onkeydown = e => {
-        e.key === this.keys.ARROW_LEFT ? this.player.moveLeft() : null
-        e.key === this.keys.ARROW_RIGHT ? this.player.moveRight() : null
-        e.key === this.keys.ARROW_UP ? this.player.jump() : null
-        e.key === this.keys.ARROW_DOWN ? this.player.moveDown() : null
+        e.key === this.keys.ARROW_LEFT ? this.player.moveLeft(this.gravity) : null
+        e.key === this.keys.ARROW_RIGHT ? this.player.moveRight(this.gravity) : null
+        e.key === this.keys.ARROW_UP ? this.player.moveUp(this.gravity) : null
+        e.key === this.keys.ARROW_DOWN ? this.player.moveDown(this.gravity) : null
+        if (e.key === this.keys.KEY_S) {
+          this.gravity = "DOWN"
+          this.player.gravitySwitch = true
+        }
+        if (e.key === this.keys.KEY_A) {
+          this.gravity = "LEFT"
+          this.player.gravitySwitch = true
+        }
+        if (e.key === this.keys.KEY_W) {
+          this.gravity = "UP"
+          this.player.gravitySwitch = true
+        }
+        if (e.key === this.keys.KEY_D) {
+          this.gravity = "RIGHT"
+          this.player.gravitySwitch = true
+        }
       }
     },
 
