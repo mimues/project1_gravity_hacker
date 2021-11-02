@@ -1,22 +1,19 @@
 class Player {
-    constructor(ctx, canvasSize, posX, posY, width, height) {
+    constructor(ctx, canvasSize, posX, posY, width, height, floors) {
       this.ctx = ctx
       this.canvasSize = canvasSize
   
       this.pos = {
         x: posX,
-        y: posY,
-        initialYDown: this.canvasSize.height-100,
-        initialYUp: 0,
-        initialXLeft: 0,
-        initialXRight:this.canvasSize.width-50
-
+        y: posY
       }
-  
+
       this.size = {
         width: width,
         height: height
       }
+
+      this.floors = floors
   
       this.speed = {
         x: 0,
@@ -25,15 +22,13 @@ class Player {
 
       this.gravitySwitch = false
       
-  
     //   this.frames = 3
     //   this.framesIndex = 0
   
     }
   
     draw() {
-        // this.ctx.save()
-        this.ctx.fillStyle = "red";
+        this.ctx.fillStyle = "green";
         this.ctx.fillRect(this.pos.x, this.pos.y, this.size.width, this.size.height)
         
       //ancho de un recorte this.imageInstance.width / this.frames
@@ -54,44 +49,17 @@ class Player {
     //   }
     }
 
-    // changeGravityLeft() {
-    //     this.rotateLeft()
-    // }
-
-    // rotateLeft() {
-        
-    //     // this.ctx.fillStyle = "red";
-    //     // this.ctx.fillRect(this.pos.x, this.pos.y, this.size.width, this.size.height)
-    //     this.ctx.translate(this.canvasSize.width/2, this.canvasSize.height/2);
-    //     this.ctx.rotate(Math.PI / 2);
-    //     this.ctx.translate(-(this.canvasSize.width/2), -(this.canvasSize.height/2));
-    //     // this.draw()
-    //     // this.ctx.restore()
-    //     // this.canvasSize.width = window.innerHeight
-    //     // this.canvasSize.height = window.innerHeight
-    //     // this.pos.initialY = this.canvasSize.width - this.size.height
-    //     // console.log(this.pos.initialY)
-    // }
-
-    // changeGravityLeft() 
-        
-    // }
-
     moveLeft(gravity) {
+        //CON LA GRAVITY HACIA ABAJO O ARRIBA --> FLECHA IZQUIERDA PARA ANDAR HACIA IZQUIERDA
         if (gravity === "DOWN" || gravity === "UP") {
             if (this.pos.x > 0) {
                 this.pos.x -= 30
             } else {
                 null
             }
-        } else if (gravity === "LEFT") {
-            if (this.pos.x > 0) {
-                this.pos.x -= 30
-            } else {
-                null
-            }
+        //CON LA GRAVITY HACIA LA DERECHA --> FLECHA IZQUIERDA PARA SALTAR
         } else if (gravity === "RIGHT") {
-            if (this.pos.x >= this.pos.initialXRight) {
+            if (this.pos.x >= this.floors[3].pos.x - this.size.width) {
                 this.pos.x -= 30
                 this.speed.x = -15
             }
@@ -99,46 +67,34 @@ class Player {
     }
     
     moveRight(gravity) {
-        // A CAPÓN
+        //CON LA GRAVITY HACIA ABAJO O ARRIBA --> FLECHA DERECHA PARA ANDAR HACIA DERECHA
         if (gravity === "DOWN" || gravity === "UP") {
             if (this.pos.x + this.size.width < this.canvasSize.width) {
                 this.pos.x += 30
             } else {
                 null
             }
+        //CON LA GRAVITY HACIA LA IZQUIERDA --> FLECHA DERECHA PARA SALTAR
         } else if (gravity === "LEFT") {
-            if (this.pos.x <= this.pos.initialXLeft) {
+            if (this.pos.x <= this.floors[1].pos.x + this.floors[1].size.width) {
                 this.pos.x += 30
                 this.speed.x = 15
                 
             }
         } 
     }
-  
-    // moveUp() {
-    //     if (this.pos.y > 0) {
-    //         this.pos.y -= 15
-    //     } else {
-    //         null
-    //     }
-    //     }
 
     moveDown(gravity) {
-        // A CAPÓN
-        if (gravity === "DOWN") {
+        //CON LA GRAVITY HACIA LOS LADOS --> FLECHA ABAJO PARA ANDAR HACIA ABAJO (LÍMITE SUELO)
+        if (gravity === "LEFT" || gravity === "RIGHT") {
             if (this.pos.y + this.size.height < this.canvasSize.height) {
                 this.pos.y += 30
             } else {
                 null
             }
-        } else if (gravity === "LEFT" || gravity === "RIGHT") {
-            if (this.pos.y + this.size.height < this.canvasSize.height) {
-                this.pos.y += 30
-            } else {
-                null
-            }
+        //CON LA GRAVITY HACIA AARRIBA --> FLECHA ABAJO PARA SALTAR
         } else if (gravity === "UP") {
-            if (this.pos.y <= this.pos.initialYUp) {
+            if (this.pos.y <= this.floors[2].pos.y + this.floors[2].size.height) {
                 this.pos.y += 30
                 this.speed.y = 15
             }
@@ -146,82 +102,79 @@ class Player {
     }
 
     moveUp(gravity) {
+        //CON LA GRAVITY HACIA ABAJO --> FLECHA ARRIBA PARA SALTAR
         if (gravity === "DOWN") {
             console.log(this.speed.y);
-            if (this.pos.y >= this.pos.initialYDown) {
+            if (this.pos.y >= this.floors[0].pos.y - this.size.height) {
                 this.pos.y -= 30
                 this.speed.y = -15
             }
+        //CON LA GRAVITY HACIA LOS LADOS --> FLECHA ARRIBA PARA ANDAR HACIA ARRIBA (LÍMITE TECHO)
         } else if (gravity === "LEFT" || gravity === "RIGHT") {
             if (this.pos.y > 0) {
                 this.pos.y -= 30
             } else {
                 null
-            // } else if (gravity === "UP") {
-            //     if (this.pos.y > 0) {
-            //         this.pos.y -= 30
-            //     } else {
-            //         null
-            //     }
-            // }
             }
         }
     }
     acceleration(gravity) {
-        //Si no estás en el suelo cada vez caes más rápido
         if (gravity === "DOWN") {
             //ESTÁ CAYENDO
-            if (this.pos.y < this.pos.initialYDown) {
-                //Si cae hacía el otro lado, se resetea la vel
+            if (this.pos.y < this.floors[0].pos.y - this.size.height || this.pos.x + this.size.width < this.floors[0].pos.x || this.pos.x > this.floors[0].pos.x + this.floors[0].size.width) {
+                //Si tenía velocidad hacía el otro lado sin resetar (no había tocado el suelo), se resetea la velocidad
                 if(this.speed.y < 0 && this.gravitySwitch) {
                     this.speed.y = 0
                     this.gravitySwitch = false
                 }
+                //GRAVEDAD
                 this.pos.y += this.speed.y
-                this.speed.y += 0.6
+                this.speed.y += 0.8
             } else {
-                //ESTÁ TOCANDO EL SUELO, LO FIJAMOS AL SUELO PARA EVITAR DESAJUSTES VISUALES
-                this.pos.y = this.pos.initialYDown
+                //ESTÁ TOCANDO EL SUELO O POR DEBAJO, LO FIJAMOS AL SUELO PARA EVITAR DESAJUSTES VISUALES
+                this.pos.y = this.floors[0].pos.y - this.size.height
                 //Reseteamos velocidad para no acumular
                 this.speed = {x: 0, y: 0}
+                //PONEMOS EL GRAVITY SWITCH EN FALSE PARA EVITAR EL IF INTERNO DE ARRIBA
                 this.gravitySwitch = false
-            }    
+            }
         } else if (gravity === "LEFT") {
-            if (this.pos.x > this.pos.initialXLeft) {
+            if (this.pos.x > this.floors[1].pos.x + this.floors[1].size.width || this.pos.y + this.size.height < this.floors[1].pos.y || this.pos.y > this.floors[1].pos.y + this.floors[1].size.height) {
                 if(this.speed.x > 0 && this.gravitySwitch) {
                     this.speed.x = 0
                     this.gravitySwitch = false
                 }
                 this.pos.x += this.speed.x
-                this.speed.x -= 0.6
+                this.speed.x -= 0.8
             } else {
-                this.pos.x = this.pos.initialXLeft
+                this.pos.x = this.floors[1].pos.x + this.floors[1].size.width
                 this.speed = {x: 0, y: 0}
                 this.gravitySwitch = false
             }
         } else if (gravity === "UP") {
-            if (this.pos.y > this.pos.initialYUp) {
+            if (this.pos.y > this.floors[2].pos.y + this.floors[2].size.height || this.pos.x + this.size.width < this.floors[2].pos.x || this.pos.x > this.floors[2].pos.x + this.floors[2].size.width) {
+                console.log("entrando");
                 if(this.speed.y > 0 && this.gravitySwitch) {
                     this.speed.y = 0
                     this.gravitySwitch = false
                 }
                 this.pos.y += this.speed.y
-                this.speed.y -= 0.6
+                this.speed.y -= 0.8
             } else {
-                this.pos.y = this.pos.initialYUp
+                this.pos.y = this.floors[2].pos.y + this.floors[2].size.height
                 this.speed = {x: 0, y: 0}
                 this.gravitySwitch = false
             }
         } else if (gravity === "RIGHT") {
-            if (this.pos.x < this.pos.initialXRight) {
+            if (this.pos.x < this.floors[3].pos.x - this.size.width || this.pos.y + this.size.height < this.floors[3].pos.y || this.pos.y > this.floors[3].pos.y + this.floors[3].size.height) {
                 if(this.speed.x < 0 && this.gravitySwitch) {
                     this.speed.x = 0
                     this.gravitySwitch = false
                 }
                 this.pos.x += this.speed.x
-                this.speed.x += 0.6
+                this.speed.x += 0.8
             } else {
-                this.pos.x = this.pos.initialXRight
+                this.pos.x = this.floors[3].pos.x - this.size.width
                 this.speed = {x: 0, y: 0}
                 this.gravitySwitch = false
             }
@@ -233,26 +186,4 @@ class Player {
     //   }
     //   this.framesIndex++
     // }
-  
-    // jump() {
-    //   //Si estás en el suelo saltas!
-    //   if (this.pos.y >= this.pos.initialY) {
-    //     this.pos.y -= 30
-    //     this.speed.y = -15
-    //   }
-    // }
-  
-    // move() {
-    //   //Si no estás en el suelo cada vez caes más rápido
-    //   if (this.pos.y < this.pos.initialY) {
-    //     this.pos.y += this.speed.y
-    //     this.speed.y += 0.6
-    //   }
-    // }
-  
-    // shoot() {
-    //   this.bullets.push(new Bullet(this.ctx, this.pos.x, this.pos.y, this.pos.initialY, this.size.width, this.size.height))
-    // }
-  
-  
   }
