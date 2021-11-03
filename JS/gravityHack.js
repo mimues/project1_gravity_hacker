@@ -3,7 +3,7 @@ const game = {
   author: 'Jesus & Miguel',
   license: undefined,
   version: '1.0.0',
-  description: 'BE Spiderman',
+  description: 'BE an apple and hit Newton with your gravity',
   canvasDOM: undefined,
   ctx: undefined,
   canvasSize: { width: undefined, height: undefined },
@@ -23,6 +23,7 @@ const game = {
   gravity: "DOWN",
   floors: [],
   lavas: [],
+  newton: undefined,
   
 
   init() {
@@ -59,10 +60,14 @@ const game = {
       if (this.isLava() || this.isFalling()) {
         this.gameOver()
       }
+      if (this.isHittingNewton()) {
+        this.youWin()
+      }
     }, 1000 / this.frames)
   },
 
   drawAll() {
+    this.drawNewton()
     this.drawLava()
     this.drawFloor()
     this.drawPlayer()
@@ -80,6 +85,10 @@ const game = {
     this.lavas.forEach(elem => elem.draw())
   },
 
+  drawNewton() {
+    this.newton.draw()
+  },
+
   gravityAll() {
     this.gravityPlayer()
   },
@@ -89,13 +98,14 @@ const game = {
   },
 
   createAll() {
+    this.createNewton()
     this.createLava()
     this.createFloor()
     this.createPlayer()
   },
 
   createPlayer() {
-    this.player = new Player(this.ctx, this.canvasSize, this.canvasSize.width/2-25, this.canvasSize.height-100, 25, 25, this.floors)
+    this.player = new Player(this.ctx, this.canvasSize, this.canvasSize.width/2-20, this.canvasSize.height-100, 40, 40, this.floors)
   },
 
   createFloor() {
@@ -122,6 +132,10 @@ const game = {
     this.lavas.push(new Lava(this.ctx, this.canvasSize, 550, this.canvasSize.height/2+247.5, 50, 5))
   },
 
+  createNewton() {
+    this.newton = new Newton(this.ctx, this.canvasSize, 525, 400, 60, 60)
+  },
+
   setListeners() {
     document.onkeydown = e => {
       e.key === this.keys.ARROW_LEFT ? this.player.moveLeft(this.gravity) : null
@@ -131,18 +145,22 @@ const game = {
       if (e.key === this.keys.KEY_S) {
         this.gravity = "DOWN"
         this.player.gravitySwitch = true
+        this.player.framesIndex = 0
       }
       if (e.key === this.keys.KEY_A) {
         this.gravity = "LEFT"
         this.player.gravitySwitch = true
+        this.player.framesIndex = 1
       }
       if (e.key === this.keys.KEY_W) {
         this.gravity = "UP"
         this.player.gravitySwitch = true
+        this.player.framesIndex = 2
       }
       if (e.key === this.keys.KEY_D) {
         this.gravity = "RIGHT"
         this.player.gravitySwitch = true
+        this.player.framesIndex = 3
       }
     }
   },
@@ -167,12 +185,27 @@ const game = {
       }
   },
 
+  isHittingNewton() {
+    return (
+      this.player.pos.x + this.player.size.width > this.newton.pos.x &&  //lado drch del player lado izq del obs
+      this.player.pos.x < this.newton.pos.x + this.newton.size.width &&         //lado izq del player lado drch del this.newton
+      this.player.pos.y + this.player.size.height > this.newton.pos.y && //lado de abajo del player lado de arriba del obs
+      this.player.pos.y < this.newton.pos.y + this.newton.size.height           //lado de arriba del player lado de abajo del obs
+    )
+  },
+
   clearScreen() {
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height)
   },
 
   gameOver() {
     clearInterval(this.intervalId)
+  },
+
+  youWin() {
+    clearInterval(this.intervalId)
+    this.ctx.fillStyle = "purple";
+        this.ctx.fillRect(0, 0, 300, 300)
   }
 
 }

@@ -21,32 +21,32 @@ class Player {
       }
 
       this.gravitySwitch = false
-      
-    //   this.frames = 3
-    //   this.framesIndex = 0
+
+      this.frames = 4
+      this.framesIndex = 0
+
+      this.imageInstance = undefined
   
+      this.init()
+    }
+
+    init () {
+        this.imageInstance = new Image()
+        this.imageInstance.src = `../Images/apple.png`
     }
   
     draw() {
-        this.ctx.fillStyle = "green";
-        this.ctx.fillRect(this.pos.x, this.pos.y, this.size.width, this.size.height)
-        
-      //ancho de un recorte this.imageInstance.width / this.frames
-    //   this.ctx.drawImage(
-    //     this.imageInstance,
-    //     this.framesIndex * this.imageInstance.width / this.frames,  //inicio de recorte x
-    //     0,                                                          //inicio de recorte y
-    //     this.imageInstance.width / this.frames,                     //ancho de recorte
-    //     this.imageInstance.height,                                  //alto de recorte
-    //     this.pos.x,
-    //     this.pos.y,
-    //     this.size.width,
-    //     this.size.height
-    //   )
-  
-    //   if (framesCounter % 10 === 0) {
-    //     this.animate()
-    //   }
+        this.ctx.drawImage(
+        this.imageInstance,
+        this.framesIndex * this.imageInstance.width / this.frames,  //inicio de recorte x
+        0,                                                          //inicio de recorte y
+        this.imageInstance.width / this.frames,                     //ancho de recorte
+        this.imageInstance.height,                                  //alto de recorte
+        this.pos.x,
+        this.pos.y,
+        this.size.width,
+        this.size.height
+      )
     }
 
     moveLeft(gravity) {
