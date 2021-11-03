@@ -18,7 +18,7 @@ class Lava {
     }
   
     draw() {
-        this.ctx.fillStyle = "red";
+        this.ctx.fillStyle = "#df4b4b";
         this.ctx.fillRect(this.pos.x, this.pos.y, this.size.width, this.size.height)
     }
   

@@ -21,6 +21,7 @@ class Player {
       }
 
       this.gravitySwitch = false
+      this.isGrown = false
 
       this.frames = 4
       this.framesIndex = 0
@@ -53,7 +54,7 @@ class Player {
         //CON LA GRAVITY HACIA ABAJO O ARRIBA --> FLECHA IZQUIERDA PARA ANDAR HACIA IZQUIERDA
         if (gravity === "DOWN" || gravity === "UP") {
             if (this.pos.x > 0) {
-                this.pos.x -= 30
+                this.pos.x -= 20
             } else {
                 null
             }
@@ -70,7 +71,7 @@ class Player {
         //CON LA GRAVITY HACIA ABAJO O ARRIBA --> FLECHA DERECHA PARA ANDAR HACIA DERECHA
         if (gravity === "DOWN" || gravity === "UP") {
             if (this.pos.x + this.size.width < this.canvasSize.width) {
-                this.pos.x += 30
+                this.pos.x += 20
             } else {
                 null
             }
@@ -88,7 +89,7 @@ class Player {
         //CON LA GRAVITY HACIA LOS LADOS --> FLECHA ABAJO PARA ANDAR HACIA ABAJO (LÍMITE SUELO)
         if (gravity === "LEFT" || gravity === "RIGHT") {
             if (this.pos.y + this.size.height < this.canvasSize.height) {
-                this.pos.y += 30
+                this.pos.y += 20
             } else {
                 null
             }
@@ -104,7 +105,6 @@ class Player {
     moveUp(gravity) {
         //CON LA GRAVITY HACIA ABAJO --> FLECHA ARRIBA PARA SALTAR
         if (gravity === "DOWN") {
-            console.log(this.speed.y);
             if (this.pos.y >= this.floors[0].pos.y - this.size.height) {
                 this.pos.y -= 30
                 this.speed.y = -15
@@ -112,7 +112,7 @@ class Player {
         //CON LA GRAVITY HACIA LOS LADOS --> FLECHA ARRIBA PARA ANDAR HACIA ARRIBA (LÍMITE TECHO)
         } else if (gravity === "LEFT" || gravity === "RIGHT") {
             if (this.pos.y > 0) {
-                this.pos.y -= 30
+                this.pos.y -= 20
             } else {
                 null
             }
@@ -153,7 +153,6 @@ class Player {
             }
         } else if (gravity === "UP") {
             if (this.pos.y > this.floors[2].pos.y + this.floors[2].size.height || this.pos.x + this.size.width < this.floors[2].pos.x || this.pos.x > this.floors[2].pos.x + this.floors[2].size.width) {
-                console.log("entrando");
                 if(this.speed.y > 0 && this.gravitySwitch) {
                     this.speed.y = 0
                     this.gravitySwitch = false

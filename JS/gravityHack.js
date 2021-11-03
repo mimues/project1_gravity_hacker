@@ -8,7 +8,7 @@ const game = {
   ctx: undefined,
   canvasSize: { width: undefined, height: undefined },
   player: undefined,
-  frames: 60,
+  frames: 80,
   intervalId: undefined,
   keys: {
         ARROW_UP: "ArrowUp",
@@ -24,6 +24,9 @@ const game = {
   floors: [],
   lavas: [],
   newton: undefined,
+  drops: [],
+  lifes: 3,
+  wateringCan: undefined,
   
 
   init() {
@@ -57,9 +60,22 @@ const game = {
       this.drawAll()
       this.gravityAll()
 
-      if (this.isLava() || this.isFalling()) {
+      if (this.isWatered() && this.player.isGrown === false) {
+        this.clearWateringCan()
+        this.growApple()
+      } else {
+        null
+      }
+      
+      if (this.lifes === 0) {
         this.gameOver()
       }
+      if ((this.isLava() || this.isFalling()) && this.lifes > 0) {
+        this.drops.pop()
+        this.lifes -= 1
+        this.resetPlayer()
+      }
+
       if (this.isHittingNewton()) {
         this.youWin()
       }
@@ -67,6 +83,8 @@ const game = {
   },
 
   drawAll() {
+    this.drawWateringCan()
+    this.drawDrop()
     this.drawNewton()
     this.drawLava()
     this.drawFloor()
@@ -89,6 +107,14 @@ const game = {
     this.newton.draw()
   },
 
+  drawDrop() {
+    this.drops.forEach(elem => elem.draw())
+  },
+
+  drawWateringCan() {
+    this.wateringCan.draw()
+  },
+
   gravityAll() {
     this.gravityPlayer()
   },
@@ -98,6 +124,8 @@ const game = {
   },
 
   createAll() {
+    this.createWateringCan()
+    this.createLifes()
     this.createNewton()
     this.createLava()
     this.createFloor()
@@ -105,7 +133,7 @@ const game = {
   },
 
   createPlayer() {
-    this.player = new Player(this.ctx, this.canvasSize, this.canvasSize.width/2-20, this.canvasSize.height-100, 40, 40, this.floors)
+    this.player = new Player(this.ctx, this.canvasSize, this.canvasSize.width/2-20, this.canvasSize.height-60, 40, 40, this.floors)
   },
 
   createFloor() {
@@ -134,6 +162,18 @@ const game = {
 
   createNewton() {
     this.newton = new Newton(this.ctx, this.canvasSize, 525, 400, 60, 60)
+  },
+
+  createLifes() {
+    let distanceBetweenHearts = 0;
+    for (let i = 0; i < this.lifes; i++) {
+      this.drops.push(new Drop(this.ctx, this.canvasSize, distanceBetweenHearts, 5, 25, 25))
+      distanceBetweenHearts += 20;
+    }
+  },
+
+  createWateringCan () {
+    this.wateringCan = new WateringCan(this.ctx, this.canvasSize, 360,200,40,40)
   },
 
   setListeners() {
@@ -168,10 +208,10 @@ const game = {
   isLava() {
     return this.lavas.some(elem => {
       return (
-        this.player.pos.x + this.player.size.width > elem.pos.x &&  //lado drch del player lado izq del obs
-        this.player.pos.x < elem.pos.x + elem.size.width &&         //lado izq del player lado drch del elem
-        this.player.pos.y + this.player.size.height > elem.pos.y && //lado de abajo del player lado de arriba del obs
-        this.player.pos.y < elem.pos.y + elem.size.height           //lado de arriba del player lado de abajo del obs
+        this.player.pos.x + this.player.size.width -5 > elem.pos.x &&  //lado drch del player lado izq del obs
+        this.player.pos.x +5 < elem.pos.x + elem.size.width &&         //lado izq del player lado drch del elem
+        this.player.pos.y + this.player.size.height -5 > elem.pos.y && //lado de abajo del player lado de arriba del obs
+        this.player.pos.y +5 < elem.pos.y + elem.size.height           //lado de arriba del player lado de abajo del obs
       )
     })
   },
@@ -194,6 +234,21 @@ const game = {
     )
   },
 
+  isWatered(){
+    return (
+      this.player.pos.x + this.player.size.width > this.wateringCan.pos.x &&
+      this.player.pos.x < this.wateringCan.pos.x + this.wateringCan.size.width &&
+      this.player.pos.y + this.player.size.height > this.wateringCan.pos.y &&
+      this.player.pos.y < this.wateringCan.pos.y + this.wateringCan.size.height
+    )
+  },
+
+  growApple(){
+    this.player.size.width += this.player.size.width
+    this.player.size.height += this.player.size.height
+    this.player.isGrown = true
+  },
+
   clearScreen() {
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height)
   },
@@ -206,6 +261,20 @@ const game = {
     clearInterval(this.intervalId)
     this.ctx.fillStyle = "purple";
         this.ctx.fillRect(0, 0, 300, 300)
+  },
+
+  resetPlayer() {
+    this.player.pos.x = this.canvasSize.width/2-20
+    this.player.pos.y = this.canvasSize.height-60
+    this.player.size.width = 40
+    this.player.size.height = 40
+    this.gravity = "DOWN"
+    this.player.framesIndex = 0
+  },
+
+  clearWateringCan() {
+    // this.ctx.clearRect(this.wateringCan.pos.x, this.wateringCan.pos.y, this.wateringCan.size.width, this.wateringCan.size.height)
+    this.wateringCan.imageInstance.src = ``
   }
 
 }

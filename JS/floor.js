@@ -18,7 +18,7 @@ class Floor {
     }
   
     draw() {
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "#333";
         this.ctx.fillRect(this.pos.x, this.pos.y, this.size.width, this.size.height)
     }
   
