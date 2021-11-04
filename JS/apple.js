@@ -121,7 +121,7 @@ class Player {
     acceleration(gravity) {
         if (gravity === "DOWN") {
             //ESTÁ CAYENDO
-            if (this.pos.y < this.floors[0].pos.y - this.size.height || this.pos.x + this.size.width < this.floors[0].pos.x || this.pos.x > this.floors[0].pos.x + this.floors[0].size.width) {
+            if (this.pos.y < this.floors[0].pos.y - this.size.height || this.pos.x + this.size.width/2 < this.floors[0].pos.x || this.pos.x + this.size.width/2 > this.floors[0].pos.x + this.floors[0].size.width) {
                 //Si tenía velocidad hacía el otro lado sin resetar (no había tocado el suelo), se resetea la velocidad
                 if(this.speed.y < 0 && this.gravitySwitch) {
                     this.speed.y = 0
@@ -139,7 +139,7 @@ class Player {
                 this.gravitySwitch = false
             }
         } else if (gravity === "LEFT") {
-            if (this.pos.x > this.floors[1].pos.x + this.floors[1].size.width || this.pos.y + this.size.height < this.floors[1].pos.y || this.pos.y > this.floors[1].pos.y + this.floors[1].size.height) {
+            if (this.pos.x > this.floors[1].pos.x + this.floors[1].size.width || this.pos.y + this.size.height/2 < this.floors[1].pos.y || this.pos.y + this.size.height/2 > this.floors[1].pos.y + this.floors[1].size.height) {
                 if(this.speed.x > 0 && this.gravitySwitch) {
                     this.speed.x = 0
                     this.gravitySwitch = false
@@ -152,7 +152,7 @@ class Player {
                 this.gravitySwitch = false
             }
         } else if (gravity === "UP") {
-            if (this.pos.y > this.floors[2].pos.y + this.floors[2].size.height || this.pos.x + this.size.width < this.floors[2].pos.x || this.pos.x > this.floors[2].pos.x + this.floors[2].size.width) {
+            if (this.pos.y > this.floors[2].pos.y + this.floors[2].size.height || this.pos.x + this.size.width/2 < this.floors[2].pos.x || this.pos.x + this.size.width/2 > this.floors[2].pos.x + this.floors[2].size.width) {
                 if(this.speed.y > 0 && this.gravitySwitch) {
                     this.speed.y = 0
                     this.gravitySwitch = false
@@ -165,7 +165,7 @@ class Player {
                 this.gravitySwitch = false
             }
         } else if (gravity === "RIGHT") {
-            if (this.pos.x < this.floors[3].pos.x - this.size.width || this.pos.y + this.size.height < this.floors[3].pos.y || this.pos.y > this.floors[3].pos.y + this.floors[3].size.height) {
+            if (this.pos.x < this.floors[3].pos.x - this.size.width || this.pos.y + this.size.height/2 < this.floors[3].pos.y || this.pos.y + this.size.height/2 > this.floors[3].pos.y + this.floors[3].size.height) {
                 if(this.speed.x < 0 && this.gravitySwitch) {
                     this.speed.x = 0
                     this.gravitySwitch = false
@@ -179,10 +179,4 @@ class Player {
             }
         }
     }
-    // animate() {
-    //   if (this.framesIndex === 2) {
-    //     this.framesIndex = 0
-    //   }
-    //   this.framesIndex++
-    // }
   }

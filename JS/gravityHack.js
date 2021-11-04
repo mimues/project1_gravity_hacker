@@ -74,10 +74,23 @@ const game = {
         this.drops.pop()
         this.lifes -= 1
         this.resetPlayer()
+        this.resetWateringCan()
       }
 
-      if (this.isHittingNewton()) {
+      if (this.isHittingNewton() && this.player.isGrown === true) {
         this.youWin()
+      }
+
+      if(this.isHittingNewton() && this.player.isGrown === false) {
+        // if (this.lifes === 0) {
+        //   this.gameOver()
+        // }
+        if (this.lifes > 0) {
+          this.drops.pop()
+          this.lifes -= 1
+          this.resetPlayer()
+          this.resetWateringCan()
+        }
       }
     }, 1000 / this.frames)
   },
@@ -161,7 +174,7 @@ const game = {
   },
 
   createNewton() {
-    this.newton = new Newton(this.ctx, this.canvasSize, 525, 400, 60, 60)
+    this.newton = new Newton(this.ctx, this.canvasSize, 510, 385, 75, 75)
   },
 
   createLifes() {
@@ -173,7 +186,7 @@ const game = {
   },
 
   createWateringCan () {
-    this.wateringCan = new WateringCan(this.ctx, this.canvasSize, 360,200,40,40)
+    this.wateringCan = new WateringCan(this.ctx, this.canvasSize, 330,230,40,40)
   },
 
   setListeners() {
@@ -255,12 +268,16 @@ const game = {
 
   gameOver() {
     clearInterval(this.intervalId)
+    document.querySelector('#myCanvas').style.display = 'none'
+    document.querySelector('.controls').style.display = 'none'
+    document.querySelector('.youLoose').style.display = 'flex'
   },
 
   youWin() {
     clearInterval(this.intervalId)
-    this.ctx.fillStyle = "purple";
-        this.ctx.fillRect(0, 0, 300, 300)
+    document.querySelector('#myCanvas').style.display = 'none'
+    document.querySelector('.controls').style.display = 'none'
+    document.querySelector('.youWin').style.display = 'flex'
   },
 
   resetPlayer() {
@@ -272,9 +289,19 @@ const game = {
     this.player.framesIndex = 0
   },
 
+  resetLifes() {
+    this.drops = []
+    this.lifes = 3
+  },
+
   clearWateringCan() {
     // this.ctx.clearRect(this.wateringCan.pos.x, this.wateringCan.pos.y, this.wateringCan.size.width, this.wateringCan.size.height)
     this.wateringCan.imageInstance.src = ``
+  },
+
+  resetWateringCan() {
+    this.wateringCan.imageInstance.src = '../Images/watering-can.png'
+    this.player.isGrown = false
   }
 
 }
