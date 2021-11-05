@@ -15,7 +15,7 @@ class WateringCan {
     }
     init () {
         this.imageInstance = new Image()
-        this.imageInstance.src = `../Images/watering-can.png`
+        this.imageInstance.src = `Images/watering-can.png`
     }
     draw() {
             this.ctx.drawImage(

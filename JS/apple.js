@@ -33,7 +33,7 @@ class Player {
 
     init () {
         this.imageInstance = new Image()
-        this.imageInstance.src = `../Images/apple.png`
+        this.imageInstance.src = `Images/apple.png`
     }
   
     draw() {
@@ -63,6 +63,7 @@ class Player {
             if (this.pos.x >= this.floors[3].pos.x - this.size.width) {
                 this.pos.x -= 30
                 this.speed.x = -15
+                bounce.play()
             }
         }
     }
@@ -80,6 +81,7 @@ class Player {
             if (this.pos.x <= this.floors[1].pos.x + this.floors[1].size.width) {
                 this.pos.x += 30
                 this.speed.x = 15
+                bounce.play()
                 
             }
         } 
@@ -98,6 +100,7 @@ class Player {
             if (this.pos.y <= this.floors[2].pos.y + this.floors[2].size.height) {
                 this.pos.y += 30
                 this.speed.y = 15
+                bounce.play()
             }
         }
     }
@@ -108,6 +111,7 @@ class Player {
             if (this.pos.y >= this.floors[0].pos.y - this.size.height) {
                 this.pos.y -= 30
                 this.speed.y = -15
+                bounce.play()
             }
         //CON LA GRAVITY HACIA LOS LADOS --> FLECHA ARRIBA PARA ANDAR HACIA ARRIBA (LÍMITE TECHO)
         } else if (gravity === "LEFT" || gravity === "RIGHT") {

@@ -23,7 +23,7 @@ class Drop {
 
     init () {
         this.imageInstance = new Image()
-        this.imageInstance.src = `../Images/drop.png`
+        this.imageInstance.src = `Images/drop.png`
     }
   
     draw() {

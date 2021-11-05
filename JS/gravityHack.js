@@ -61,6 +61,7 @@ const game = {
       this.gravityAll()
 
       if (this.isWatered() && this.player.isGrown === false) {
+        grow.play()
         this.clearWateringCan()
         this.growApple()
       } else {
@@ -71,6 +72,7 @@ const game = {
         this.gameOver()
       }
       if ((this.isLava() || this.isFalling()) && this.lifes > 0) {
+        appleBite.play()
         this.drops.pop()
         this.lifes -= 1
         this.resetPlayer()
@@ -78,6 +80,7 @@ const game = {
       }
 
       if (this.isHittingNewton() && this.player.isGrown === true) {
+        hit.play()
         this.youWin()
       }
 
@@ -86,6 +89,7 @@ const game = {
         //   this.gameOver()
         // }
         if (this.lifes > 0) {
+          appleBite.play()
           this.drops.pop()
           this.lifes -= 1
           this.resetPlayer()
@@ -300,8 +304,13 @@ const game = {
   },
 
   resetWateringCan() {
-    this.wateringCan.imageInstance.src = '../Images/watering-can.png'
+    this.wateringCan.imageInstance.src = 'Images/watering-can.png'
     this.player.isGrown = false
   }
 
 }
+
+let appleBite = new Audio("Sounds/bite-crunch.mp3");
+let bounce = new Audio("Sounds/boing.mp3")
+let hit = new Audio("Sounds/punch.mp3")
+let grow = new Audio("Sounds/grow.mp3")

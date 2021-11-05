@@ -23,7 +23,7 @@ class Newton {
 
     init () {
         this.imageInstance = new Image()
-        this.imageInstance.src = `../Images/newton.png`
+        this.imageInstance.src = `Images/newton.png`
     }
   
     draw() {
