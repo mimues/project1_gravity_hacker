@@ -6,7 +6,7 @@
 
 @font-face {
     font-family: onoff;
-    src: url(../refs/onoff.otf);
+    src: url(./../refs/onoff.otf);
     }
 
 body {
@@ -59,7 +59,7 @@ h3 {
 
 .game {
     display: none;
-    background-image: url(../Images/background.png);
+    background-image: url(./../Images/background.png);
     height: 100%;
     align-items: center;
     justify-content: space-evenly;
