@@ -161,7 +161,6 @@ const game = {
   },
 
   createLava(){
-    // this.lavas.push(new Lava(this.ctx, this.canvasSize, this.canvasSize.width, this.canvasSize.height, this.canvasSize.width/2, this.canvasSize.height/2, 5))
     this.lavas.push(new Lava(this.ctx, this.canvasSize, this.canvasSize.width/2-2.5, 100, 5, 200))
     this.lavas.push(new Lava(this.ctx, this.canvasSize, 100, this.canvasSize.height/2-2.5, 200, 5))
     this.lavas.push(new Lava(this.ctx, this.canvasSize, 300, this.canvasSize.height/2-2.5, 50, 5))
@@ -299,7 +298,6 @@ const game = {
   },
 
   clearWateringCan() {
-    // this.ctx.clearRect(this.wateringCan.pos.x, this.wateringCan.pos.y, this.wateringCan.size.width, this.wateringCan.size.height)
     this.wateringCan.imageInstance.src = ``
   },
 

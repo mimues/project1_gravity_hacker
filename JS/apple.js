@@ -126,7 +126,7 @@ class Player {
         if (gravity === "DOWN") {
             //ESTÁ CAYENDO
             if (this.pos.y < this.floors[0].pos.y - this.size.height || this.pos.x + this.size.width/2 < this.floors[0].pos.x || this.pos.x + this.size.width/2 > this.floors[0].pos.x + this.floors[0].size.width) {
-                //Si tenía velocidad hacía el otro lado sin resetar (no había tocado el suelo), se resetea la velocidad
+                //Si tenía velocidad hacia el otro lado sin resetar (no había tocado el suelo), se resetea la velocidad
                 if(this.speed.y < 0 && this.gravitySwitch) {
                     this.speed.y = 0
                     this.gravitySwitch = false
